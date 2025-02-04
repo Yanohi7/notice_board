@@ -5,7 +5,8 @@
     <title>{{ title }}</title>
 </head>
 <body>
-    <h2>Реєстрація</h2>
+    <h2>реєстрація</h2>
+    <!-- форма реєстрації -->
     <form method="POST">
         {{ form.hidden_tag() }}
         <p>{{ form.email.label }} {{ form.email }}</p>
@@ -13,6 +14,7 @@
         <p>{{ form.confirm_password.label }} {{ form.confirm_password }}</p>
         <p>{{ form.submit }}</p>
     </form>
-    <a href="{{ url_for('login') }}">Вже маєте акаунт? Увійдіть тут</a>
+    <!-- посилання для переходу на сторінку входу -->
+    <a href="{{ url_for('login') }}">вже маєте акаунт? увійдіть тут</a>
 </body>
 </html>

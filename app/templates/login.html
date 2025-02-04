@@ -5,13 +5,15 @@
     <title>{{ title }}</title>
 </head>
 <body>
-    <h2>Вхід</h2>
+    <h2>вхід</h2>
+    <!-- форма входу -->
     <form method="POST">
         {{ form.hidden_tag() }}
         <p>{{ form.email.label }} {{ form.email }}</p>
         <p>{{ form.password.label }} {{ form.password }}</p>
         <p>{{ form.submit }}</p>
     </form>
-    <a href="{{ url_for('home') }}">Назад</a>
+    <!-- посилання для повернення на головну сторінку -->
+    <a href="{{ url_for('home') }}">назад</a>
 </body>
 </html>

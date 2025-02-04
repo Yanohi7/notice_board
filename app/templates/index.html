@@ -4,11 +4,14 @@
     <meta charset="UTF-8">
     <title>{{ title }}</title>
     <style>
+        /* задається загальний стиль для тіла сторінки */
         body {
             font-family: Arial, sans-serif;
             padding: 20px;
             margin: 0;
         }
+
+        /* стиль для верхньої панелі навігації */
         .navbar {
             display: flex;
             justify-content: flex-end;
@@ -16,10 +19,14 @@
             background-color: #f8f9fa;
             padding: 10px 20px;
         }
+
+        /* стиль для посилань у навбарі */
         .navbar a {
             text-decoration: none;
             margin-left: 10px;
         }
+
+        /* стиль для кнопок у навбарі */
         .navbar button {
             padding: 10px 15px;
             border: none;
@@ -28,9 +35,13 @@
             cursor: pointer;
             border-radius: 5px;
         }
+
+        /* змінюється колір кнопки при наведенні */
         .navbar button:hover {
             background-color: #0056b3;
         }
+
+        /* стиль для контейнера з основним контентом */
         .container {
             text-align: center;
             margin-top: 50px;
@@ -39,24 +50,24 @@
 </head>
 <body>
 
-    <!-- Навбар з кнопками у правому верхньому куті -->
+    <!-- панель навігації з кнопками для входу/виходу -->
     <div class="navbar">
         {% if current_user.is_authenticated %}
-            <span>Привіт, {{ current_user.email }}!</span>
+            <span>привіт, {{ current_user.email }}!</span>
             <a href="{{ url_for('logout') }}">
-                <button>Вийти</button>
+                <button>вийти</button>
             </a>
         {% else %}
             <a href="{{ url_for('login') }}">
-                <button>Вхід</button>
+                <button>вхід</button>
             </a>
             <a href="{{ url_for('register') }}">
-                <button>Реєстрація</button>
+                <button>реєстрація</button>
             </a>
         {% endif %}
     </div>
 
-    <!-- Основний контент сторінки -->
+    <!-- основний контент сторінки -->
     <div class="container">
         <h1>Notice Board</h1>
         <p>Вітаємо на нашій потужній дошці оголошень!</p>
