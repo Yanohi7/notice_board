@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+</head>
+<body>
+    <h2>Вхід</h2>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <p>{{ form.email.label }} {{ form.email }}</p>
+        <p>{{ form.password.label }} {{ form.password }}</p>
+        <p>{{ form.submit }}</p>
+    </form>
+    <a href="{{ url_for('home') }}">Назад</a>
+</body>
+</html>

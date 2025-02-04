@@ -2,7 +2,6 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ title }}</title>
     <style>
         body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
@@ -11,6 +10,9 @@
 </head>
 <body>
     <h1>Notice Board</h1>
-    <p>Вітаємо на нашій потужній дошці оголошень!</p>
+    <p>Вітаємо на нашій дошці оголошень!</p>
+    <a href="{{ url_for('login') }}">
+        <button>Вхід</button>
+    </a>
 </body>
 </html>
