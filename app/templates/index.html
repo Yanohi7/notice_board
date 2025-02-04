@@ -4,15 +4,63 @@
     <meta charset="UTF-8">
     <title>{{ title }}</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
-        h1 { color: #333; }
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            margin: 0;
+        }
+        .navbar {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            background-color: #f8f9fa;
+            padding: 10px 20px;
+        }
+        .navbar a {
+            text-decoration: none;
+            margin-left: 10px;
+        }
+        .navbar button {
+            padding: 10px 15px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .navbar button:hover {
+            background-color: #0056b3;
+        }
+        .container {
+            text-align: center;
+            margin-top: 50px;
+        }
     </style>
 </head>
 <body>
-    <h1>Notice Board</h1>
-    <p>Вітаємо на нашій дошці оголошень!</p>
-    <a href="{{ url_for('login') }}">
-        <button>Вхід</button>
-    </a>
+
+    <!-- Навбар з кнопками у правому верхньому куті -->
+    <div class="navbar">
+        {% if current_user.is_authenticated %}
+            <span>Привіт, {{ current_user.email }}!</span>
+            <a href="{{ url_for('logout') }}">
+                <button>Вийти</button>
+            </a>
+        {% else %}
+            <a href="{{ url_for('login') }}">
+                <button>Вхід</button>
+            </a>
+            <a href="{{ url_for('register') }}">
+                <button>Реєстрація</button>
+            </a>
+        {% endif %}
+    </div>
+
+    <!-- Основний контент сторінки -->
+    <div class="container">
+        <h1>Notice Board</h1>
+        <p>Вітаємо на нашій потужній дошці оголошень!</p>
+    </div>
+
 </body>
 </html>
