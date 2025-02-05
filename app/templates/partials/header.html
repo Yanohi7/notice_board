@@ -1,0 +1,15 @@
+<div class="custom-navbar">
+    {% if current_user.is_authenticated %}
+        <span>Привіт, {{ current_user.email }}!</span>
+        <a href="{{ url_for('logout') }}">
+            <button>Вийти</button>
+        </a>
+    {% else %}
+        <a href="{{ url_for('login') }}">
+            <button>Вхід</button>
+        </a>
+        <a href="{{ url_for('register') }}">
+            <button>Реєстрація</button>
+        </a>
+    {% endif %}
+</div>

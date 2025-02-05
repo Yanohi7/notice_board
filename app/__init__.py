@@ -29,5 +29,9 @@ from app.models import User, Announcement, AnnouncementReceiver
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+from app.announcements import announcements_bp
+app.register_blueprint(announcements_bp, url_prefix="/announcements") # реєстрація блюпринта
+
+
 # імпортуються маршрути додатку
 from app import routes
