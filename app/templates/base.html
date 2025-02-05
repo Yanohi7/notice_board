@@ -14,6 +14,24 @@
             padding: 20px;
             margin: 0;
         }
+
+    /* Загальний контейнер для повідомлень */
+    .flash-messages {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        z-index: 1050;
+        width: 300px;
+    }
+
+    /* Стилізація для різних типів повідомлень */
+    .alert {
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        font-size: 14px;
+    }
+
 </style>
     {% block styles %}
     {% endblock %}
