@@ -22,12 +22,13 @@ class User(db.Model, UserMixin):
 
 
 class Announcement(db.Model):
-    """модель оголошення, яке створює викладач"""
-    id = db.Column(db.Integer, primary_key=True)  # унікальний ідентифікатор оголошення
-    teacher_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)  # ID викладача, який створив оголошення
-    title = db.Column(db.String(255), nullable=False)  # заголовок оголошення
-    message = db.Column(db.Text, nullable=False)  # текст повідомлення
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)  # дата створення оголошення
+    """Модель оголошення, яке створює викладач"""
+    id = db.Column(db.Integer, primary_key=True)
+    teacher_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    title = db.Column(db.String(255), nullable=False)
+    message = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    archived = db.Column(db.Boolean, default=False)  # НОВЕ поле для архівування
 
 
 class AnnouncementReceiver(db.Model):

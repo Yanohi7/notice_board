@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Архівовані оголошення</h2>
+{% for announcement in announcements %}
+    <div>
+        <h3>{{ announcement.title }}</h3>
+        <p>{{ announcement.message }}</p>
+        <small>Дата: {{ announcement.created_at }}</small>
+    </div>
+{% endfor %}
+{% endblock %}

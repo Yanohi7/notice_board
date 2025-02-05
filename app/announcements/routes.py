@@ -8,17 +8,18 @@ from app.announcements.forms import AnnouncementForm
 @announcements_bp.route("/")
 @login_required
 def list_announcements():
-    """Список оголошень"""
+    """Список активних оголошень"""
     if current_user.role == "teacher":
-        announcements = Announcement.query.filter_by(teacher_id=current_user.id).all()
+        announcements = Announcement.query.filter_by(teacher_id=current_user.id, archived=False).all()
     else:
         announcements = (
             db.session.query(Announcement)
             .join(AnnouncementReceiver)
-            .filter(AnnouncementReceiver.student_id == current_user.id)
+            .filter(AnnouncementReceiver.student_id == current_user.id, Announcement.archived == False)
             .all()
         )
     return render_template("announcements/list.html", announcements=announcements)
+
 @announcements_bp.route("/create", methods=["GET", "POST"])
 @login_required
 def create_announcement():
@@ -49,3 +50,34 @@ def create_announcement():
         return redirect(url_for("announcements.list_announcements"))
 
     return render_template("announcements/create.html", form=form)
+
+
+@announcements_bp.route("/archive/<int:announcement_id>", methods=["POST"])
+@login_required
+def archive_announcement(announcement_id):
+    """Архівування оголошення"""
+    announcement = Announcement.query.get_or_404(announcement_id)
+
+    if current_user.id != announcement.teacher_id:
+        flash("Ви не можете архівувати це оголошення", "danger")
+        return redirect(url_for("announcements.list_announcements"))
+
+    announcement.archived = True
+    db.session.commit()
+    flash("Оголошення архівоване", "success")
+    return redirect(url_for("announcements.list_announcements"))
+
+@announcements_bp.route("/archived")
+@login_required
+def list_archived_announcements():
+    """Список архівованих оголошень"""
+    if current_user.role == "teacher":
+        announcements = Announcement.query.filter_by(teacher_id=current_user.id, archived=True).all()
+    else:
+        announcements = (
+            db.session.query(Announcement)
+            .join(AnnouncementReceiver)
+            .filter(AnnouncementReceiver.student_id == current_user.id, Announcement.archived == True)
+            .all()
+        )
+    return render_template("announcements/archived.html", announcements=announcements)
