@@ -1,24 +1,23 @@
 from datetime import datetime
-
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import db
 
 # створюється модель користувача для бази даних
-class User(db.Model):
-    """Модель користувача (студента або викладача)"""
-    id = db.Column(db.Integer, primary_key=True)  # Унікальний ідентифікатор користувача
-    email = db.Column(db.String(150), unique=True, nullable=False)  # Унікальний email
-    password_hash = db.Column(db.String(256), nullable=False)  # Хешований пароль
-    role = db.Column(db.String(10), nullable=False)  # Роль користувача: 'student' або 'teacher'
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)  # Дата створення користувача
+class User(db.Model, UserMixin):
+    """модель користувача"""
+    id = db.Column(db.Integer, primary_key=True)  # унікальний ідентифікатор користувача
+    email = db.Column(db.String(150), unique=True, nullable=False)  # унікальний email
+    password_hash = db.Column(db.String(256), nullable=False)  # хешований пароль
+    role = db.Column(db.String(10), default="user", nullable=False)  # роль за замовчуванням "user"
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)  # дата створення користувача
 
     def set_password(self, password):
-        """Метод для хешування пароля перед збереженням у базі"""
+        """метод для хешування пароля перед збереженням у базі"""
         self.password_hash = generate_password_hash(password)
 
     def check_password(self, password):
-        """Метод для перевірки введеного пароля з хешованим паролем у базі"""
+        """метод для перевірки введеного пароля з хешованим паролем"""
         return check_password_hash(self.password_hash, password)
 
 
