@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="uk">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ title }}</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block title %}Реєстрація{% endblock %}
+{% block styles %} {% endblock %}
+{% block content %}
     <h2>реєстрація</h2>
     <!-- форма реєстрації -->
     <form method="POST">
@@ -15,6 +13,5 @@
         <p>{{ form.submit }}</p>
     </form>
     <!-- посилання для переходу на сторінку входу -->
-    <a href="{{ url_for('login') }}">вже маєте акаунт? увійдіть тут</a>
-</body>
-</html>
+       <a href="{{ url_for('login') }}">вже маєте акаунт? увійдіть тут</a>
+{% endblock %}

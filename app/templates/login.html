@@ -1,10 +1,9 @@
-<!DOCTYPE html>
-<html lang="uk">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ title }}</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block title %}Вхід{% endblock %}
+{% block styles %} {% endblock %}
+
+{% block content %}
     <h2>вхід</h2>
     <!-- форма входу -->
     <form method="POST">
@@ -15,5 +14,4 @@
     </form>
     <!-- посилання для повернення на головну сторінку -->
     <a href="{{ url_for('home') }}">назад</a>
-</body>
-</html>
+{% endblock %}

@@ -1,77 +1,79 @@
-<!DOCTYPE html>
-<html lang="uk">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ title }}</title>
-    <style>
-        /* задається загальний стиль для тіла сторінки */
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-            margin: 0;
-        }
+{% extends 'base.html' %}
 
-        /* стиль для верхньої панелі навігації */
-        .navbar {
+{% block title %}Notice Board{% endblock %}
+
+{% block styles %}
+<style>
+
+        /* Панель навігації */
+        .custom-navbar {
             display: flex;
             justify-content: flex-end;
             align-items: center;
             background-color: #f8f9fa;
             padding: 10px 20px;
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 60px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
         }
 
-        /* стиль для посилань у навбарі */
-        .navbar a {
+        /* Стиль для посилань у навбарі */
+        .custom-navbar a {
             text-decoration: none;
             margin-left: 10px;
         }
 
-        /* стиль для кнопок у навбарі */
-        .navbar button {
+        /* Стиль для кнопок */
+        .custom-navbar button {
             padding: 10px 15px;
             border: none;
-            background-color: #007bff;
-            color: white;
+            background-color: #007bff !important; /* Примусово синій колір */
+            color: white !important;
             cursor: pointer;
             border-radius: 5px;
+            font-size: 16px;
+            display: inline-block;
+            appearance: none;
+            transition: background 0.3s ease;
         }
 
-        /* змінюється колір кнопки при наведенні */
-        .navbar button:hover {
-            background-color: #0056b3;
+        /* Зміна кольору при наведенні */
+        .custom-navbar button:hover {
+            background-color: #0056b3 !important;
         }
 
-        /* стиль для контейнера з основним контентом */
+        /* Основний контейнер */
         .container {
             text-align: center;
-            margin-top: 50px;
+            margin-top: 80px; /* Щоб контент не заходив під navbar */
         }
-    </style>
-</head>
-<body>
+</style>
+{% endblock %}
 
-    <!-- панель навігації з кнопками для входу/виходу -->
-    <div class="navbar">
+{% block content %}
+    <!-- Панель навігації з кнопками входу/виходу -->
+    <div class="custom-navbar">
         {% if current_user.is_authenticated %}
-            <span>привіт, {{ current_user.email }}!</span>
+            <span>Привіт, {{ current_user.email }}!</span>
             <a href="{{ url_for('logout') }}">
-                <button>вийти</button>
+                <button>Вийти</button>
             </a>
         {% else %}
             <a href="{{ url_for('login') }}">
-                <button>вхід</button>
+                <button>Вхід</button>
             </a>
             <a href="{{ url_for('register') }}">
-                <button>реєстрація</button>
+                <button>Реєстрація</button>
             </a>
         {% endif %}
     </div>
 
-    <!-- основний контент сторінки -->
     <div class="container">
         <h1>Notice Board</h1>
         <p>Вітаємо на нашій потужній дошці оголошень!</p>
     </div>
-
-</body>
-</html>
+{% endblock %}
