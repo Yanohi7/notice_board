@@ -7,30 +7,40 @@
     <!-- Підключення Bootstrap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 
-<style>
-    /* Стиль для тіла сторінки */
+    <style>
+        /* Стиль для тіла сторінки */
         body {
             font-family: Arial, sans-serif;
             padding: 20px;
             margin: 0;
         }
 
-    /* Загальний контейнер для повідомлень */
-    .flash-messages {
-        position: fixed;
-        top: 10px;
-        left: 10px;
-        z-index: 1050;
-        width: 300px;
-    }
+        /* Загальний контейнер для повідомлень */
+        .flash-messages {
+            position: fixed;
+            top: 10%; /* Опустив нижче */
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1050;
+            width: 350px;
+        }
 
-    /* Стилізація для різних типів повідомлень */
-    .alert {
-        padding: 10px;
-        border-radius: 5px;
-        margin-bottom: 10px;
-        font-size: 14px;
-    }
+        /* Стилізація для повідомлень */
+        .alert {
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            opacity: 0;  /* Початково сховані */
+            transform: translateY(-10px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        /* Показ повідомлення */
+        .alert.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
         /* Панель навігації */
         .custom-navbar {
@@ -48,7 +58,6 @@
             z-index: 1000;
         }
 
-
         /* Стиль для посилань у навбарі */
         .custom-navbar a {
             text-decoration: none;
@@ -59,13 +68,11 @@
         .custom-navbar button {
             padding: 10px 15px;
             border: none;
-            background-color: #007bff !important; /* Примусово синій колір */
+            background-color: #007bff !important;
             color: white !important;
             cursor: pointer;
             border-radius: 5px;
             font-size: 16px;
-            display: inline-block;
-            appearance: none;
             transition: background 0.3s ease;
         }
 
@@ -77,17 +84,19 @@
         /* Основний контейнер */
         .container {
             text-align: center;
-            margin-top: 80px; /* Щоб контент не заходив під navbar */
+            margin-top: 80px;
         }
-</style>
+    </style>
+
     {% block styles %}
     {% endblock %}
 </head>
 
 <body>
- {% if request.endpoint not in ['login', 'register'] %}
+
+    {% if request.endpoint not in ['login', 'register'] %}
         {% include "partials/header.html" %}
- {% endif %}
+    {% endif %}
 
     <!-- Виведення повідомлень -->
     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -104,5 +113,23 @@
 
     <!-- Основний контент сторінки -->
     {% block content %}{% endblock %}
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const alerts = document.querySelectorAll(".alert");
+
+            alerts.forEach((alert, index) => {
+                setTimeout(() => {
+                    alert.classList.add("show");  // Плавна поява
+
+                    setTimeout(() => {
+                        alert.classList.remove("show");  // Плавне зникнення
+                        setTimeout(() => alert.remove(), 500);  // Видалення з DOM
+                    }, 1700 + index * 500);  // Час затримки
+                }, 300 * index);
+            });
+        });
+    </script>
+
 </body>
 </html>
