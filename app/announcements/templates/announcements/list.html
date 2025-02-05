@@ -1,12 +1,19 @@
 {% extends "base.html" %}
 {% block content %}
-<a href="{{ url_for('announcements.list_archived_announcements') }}">Переглянути архів</a>
+<a href="{{ url_for('announcements.list_archived_announcements') }}">
+    <button> Переглянути архів</button>
+</a>
+
+<a href="{{ url_for('announcements.create_announcement') }}">
+    <button> Створити оголошення</button>
+</a>
+
 <h2>Оголошення</h2>
 {% for announcement in announcements %}
     <div>
         <h3>{{ announcement.title }}</h3>
         <p>{{ announcement.message }}</p>
-        <small>Дата: {{ announcement.created_at }}</small>
+        <small>Дата створення: {{ announcement.created_at.strftime('%d.%m.%Y %H:%M') }}</small>
         {% if current_user.role == "user" %} # ПОКИ ЩО БЕЗ РОЛЕЙ
             <form action="{{ url_for('announcements.archive_announcement', announcement_id=announcement.id) }}" method="post">
                 <button type="submit">Архівувати</button>

@@ -6,7 +6,7 @@
     <div>
         <h3>{{ announcement.title }}</h3>
         <p>{{ announcement.message }}</p>
-        <small>Дата: {{ announcement.created_at }}</small>
+         <small>Дата створення: {{ announcement.created_at.strftime('%d.%m.%Y %H:%M') }}</small>
     </div>
 {% endfor %}
 {% endblock %}
