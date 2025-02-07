@@ -116,3 +116,18 @@ a.btn-link {
 .announcement-item {
     font-size: 14px;
 }
+
+/* Стилі для сторінки 404 */
+.text-primary {
+    text-shadow: 2px 2px 10px rgba(0, 123, 255, 0.5);
+}
+
+.img-fluid {
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}

@@ -7,7 +7,12 @@ from flask_login import login_user, logout_user, login_required
 # маршрут для головної сторінки
 @app.route("/")
 def home():
-    return render_template("index.html", title="Notice Board")
+    return render_template("index.html")
+
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template("404.html"), 404
+
 
 # маршрут для реєстрації нового користувача
 @app.route("/register", methods=["GET", "POST"])
@@ -24,7 +29,7 @@ def register():
         login_user(user)
         flash("Реєстрація успішна!", "success")
         return redirect(url_for("home"))
-    return render_template("register.html", title="Реєстрація", form=form)
+    return render_template("register.html", form=form)
 
 # маршрут для входу користувача
 @app.route("/login", methods=["GET", "POST"])
@@ -40,7 +45,7 @@ def login():
             return redirect(url_for("home"))
         else:
             flash("Невірний email або пароль", "danger")
-    return render_template("login.html", title="Вхід", form=form)
+    return render_template("login.html", form=form)
 
 # маршрут для виходу користувача з системи
 @app.route("/logout")

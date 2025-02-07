@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}404 - Сторінку не знайдено{% endblock %}
+
+{% block content %}
+<div class="container text-center mt-5">
+    <p class="lead text-muted">Ой! Сторінку не знайдено</p>
+
+    <div class="mt-4">
+        <img src="{{ url_for('static', filename='img/404.png') }}" alt="404" class="img-fluid" style="max-width: 400px;">
+    </div>
+    <p class="mt-4 text-muted">Можливо, вона була переміщена або видалена</p>
+
+    <a href="{{ url_for('home') }}" class="btn btn-lg btn-primary mt-3">
+        <i class="fas fa-arrow-left"></i> На головну
+    </a>
+</div>
+{% endblock %}
