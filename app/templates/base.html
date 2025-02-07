@@ -13,8 +13,8 @@
 </head>
 
 <body>
-
-    {% if request.endpoint not in ['login', 'register'] %}
+    <!-- Хедер із навігацією видно тільки залогіненим користувачам, і на всіх сторінках крім login та register -->
+    {% if request.endpoint not in ['login', 'register'] and current_user.is_authenticated %}
         {% include "partials/header.html" %}
     {% endif %}
 

@@ -4,10 +4,6 @@
 
 {% block content %}
 
-{% if current_user.is_authenticated %}
-    {% include "partials/header.html" %}  {# Показуємо хедер тільки якщо користувач увійшов #}
-{% endif %}
-
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-8 text-center">
