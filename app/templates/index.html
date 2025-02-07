@@ -1,14 +1,41 @@
 {% extends 'base.html' %}
 
-{% block title %}Notice Board{% endblock %}
-
-{% block styles %} {% endblock %}
+{% block title %}Головна | Notice Board{% endblock %}
 
 {% block content %}
 
+{% if current_user.is_authenticated %}
+    {% include "partials/header.html" %}  {# Показуємо хедер тільки якщо користувач увійшов #}
+{% endif %}
 
-    <div class="container">
-        <h1>Notice Board</h1>
-        <p>Вітаємо на нашій потужній дошці оголошень!</p>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <h1 class="display-4">Ласкаво просимо до Notice Board</h1>
+            <p class="lead mt-3">
+                <strong>Notice Board</strong> – це платформа для викладачів, які надсилають оголошення студентам.
+                Тут ви знайдете важливі навчальні оновлення, графіки занять, нагадування про дедлайни та багато іншого.
+            </p>
+            <p class="mt-4">
+                📌 <strong>Що можна робити?</strong>
+            </p>
+            <ul class="list-unstyled text-start d-inline-block">
+                <li>✅ Викладачі можуть швидко публікувати оголошення</li>
+                <li>✅ Студенти отримують актуальну інформацію вчасно</li>
+                <li>✅ Простий інтерфейс для взаємодії</li>
+                <li>✅ Сучасний адаптивний дизайн</li>
+            </ul>
+
+            {% if not current_user.is_authenticated %}  {# Якщо користувач не увійшов, показуємо кнопки #}
+                <div class="mt-4">
+                    <a href="{{ url_for('register') }}" class="btn btn-success btn-lg">Зареєструватися</a>
+                    <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg">Увійти</a>
+                </div>
+            {% endif %}
+        </div>
     </div>
+
+    <hr class="my-5">
+</div>
+
 {% endblock %}

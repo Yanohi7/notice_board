@@ -1,17 +1,28 @@
 {% extends 'base.html' %}
 
 {% block title %}Вхід{% endblock %}
-{% block styles %} {% endblock %}
-{% block header %} {% endblock %}
+
 {% block content %}
-    <h2>вхід</h2>
-    <!-- форма входу -->
-    <form method="POST">
-        {{ form.hidden_tag() }}
-        <p>{{ form.email.label }} {{ form.email }}</p>
-        <p>{{ form.password.label }} {{ form.password }}</p>
-        <p>{{ form.submit }}</p>
-    </form>
-    <!-- посилання для повернення на головну сторінку -->
-    <a href="{{ url_for('home') }}">назад</a>
+<div class="container auth-container">
+    <div class="card p-4 shadow-lg" style="width: 400px;">
+        <h2 class="text-center mb-3">Вхід</h2>
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <div class="mb-3">
+                {{ form.email.label(class="form-label") }}
+                {{ form.email(class="form-control") }}
+            </div>
+            <div class="mb-3">
+                {{ form.password.label(class="form-label") }}
+                {{ form.password(class="form-control") }}
+            </div>
+            <div class="d-grid">
+                {{ form.submit(class="btn btn-primary") }}
+            </div>
+        </form>
+        <div class="text-center mt-3">
+            <a href="{{ url_for('home') }}" class="btn btn-link">Назад</a>
+        </div>
+    </div>
+</div>
 {% endblock %}

@@ -1,35 +1,14 @@
-{% block styles %}
-<style>
-   .custom-navbar .announcements {
-    position: absolute;
-    left: 0;
-}
-
-
-body {
-    padding-top: 70px; /* відступ для коректного розміщення контенту,
-    щоб хедер не перекривав сторінку */
-
-}
-
-</style>
-{% endblock %}
-
 <div class="custom-navbar">
+    <div class="announcements-list">
+        <a href="{{ url_for('announcements.list_announcements') }}" class="btn btn-primary">Оголошення</a>
+    </div>
+
     {% if current_user.is_authenticated %}
-        <a class="announcements" href="{{ url_for('announcements.list_announcements') }}">
-            <button>Оголошення</button>
-        </a>
-        <span>Привіт, {{ current_user.email }}!</span>
-        <a href="{{ url_for('logout') }}">
-            <button>Вийти</button>
-        </a>
-    {% else %}
-        <a href="{{ url_for('login') }}">
-            <button>Вхід</button>
-        </a>
-        <a href="{{ url_for('register') }}">
-            <button>Реєстрація</button>
-        </a>
+        <div class="user-info">
+            <span class="user-email">Привіт, {{ current_user.email }}!</span>
+            <a href="{{ url_for('logout') }}">
+                <button class="logout-btn">Вийти</button>
+            </a>
+        </div>
     {% endif %}
 </div>
