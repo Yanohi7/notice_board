@@ -1,28 +1,29 @@
 {% extends "base.html" %}
+{% block styles %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/announcements.css') }}">
+{% endblock %}
 {% block content %}
-<a href="{{ url_for('announcements.list_archived_announcements') }}">
-    <button> Переглянути архів</button>
-</a>
 
-<a href="{{ url_for('announcements.create_announcement') }}">
-    <button> Створити оголошення</button>
-</a>
+<div class="container">
+    <a href="{{ url_for('announcements.create_announcement') }}" class="btn btn-primary mb-3">
+        Створити оголошення
+    </a>
 
-<h2>Оголошення</h2>
-{% if announcements %}
-    {% for announcement in announcements %}
-        <div>
-            <h3>{{ announcement.title }}</h3>
-            <p>{{ announcement.message }}</p>
-            <small>Дата створення: {{ announcement.created_at.strftime('%d.%m.%Y %H:%M') }}</small>
-            {% if current_user.role == "user" %}  <!-- ПОКИ ЩО БЕЗ РОЛЕЙ-->
-                <form action="{{ url_for('announcements.archive_announcement', announcement_id=announcement.id) }}" method="post">
-                    <button type="submit">Архівувати</button>
-                </form>
-            {% endif %}
+    <h2 class="text-center mb-4">📌 Дошка оголошень</h2>
+
+    {% if announcements %}
+        <div class="announcement-board">
+            {% for announcement in announcements %}
+                <div class="announcement-card">
+                    <h3>{{ announcement.title }}</h3>
+                    <p>{{ announcement.message }}</p>
+                    <small class="text-muted">📅 {{ announcement.created_at.strftime('%d.%m.%Y %H:%M') }}</small>
+                </div>
+            {% endfor %}
         </div>
-    {% endfor %}
-{% else %}
-    <p>Наразі немає жодних оголошень</p>
-{% endif %}
+    {% else %}
+        <p class="text-center text-muted">Наразі немає жодних оголошень</p>
+    {% endif %}
+</div>
+
 {% endblock %}

@@ -1,0 +1,65 @@
+/* Загальний фон */
+body {
+    background-color: #f8f0e3; /* Бежевий фон як коркова дошка */
+}
+
+/* Контейнер дошки */
+.announcement-board {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* Картка оголошення */
+.announcement-card {
+    background: #fff8dc; /* Кремовий колір, як папір */
+    border: 2px solid #d4af37; /* Золотистий відтінок */
+    border-radius: 10px;
+    padding: 15px;
+    width: 300px;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.1);
+    transform: rotate(-2deg); /* Легкий нахил для ефекту вручну прикріплених оголошень */
+    transition: transform 0.2s ease-in-out;
+    position: relative;
+}
+
+/* Імітація кнопки (канцелярської кнопки) */
+.announcement-card::before {
+    content: "📌";
+    font-size: 24px;
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Анімація при наведенні */
+.announcement-card:hover {
+    transform: rotate(0deg) scale(1.05);
+}
+
+/* Стилізація фонової форми */
+.card {
+    max-width: 600px;
+    margin: auto;
+    border-radius: 10px;
+    background: #ffffff;
+}
+
+/* Додатковий стиль для інпутів */
+.form-control, .form-select {
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+}
+
+/* Кнопка */
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}

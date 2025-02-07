@@ -1,13 +1,32 @@
 {% extends "base.html" %}
+{% block styles %} {% endblock %}
 {% block content %}
-<h2>Створити оголошення</h2>
-<form method="POST">
-    {{ form.hidden_tag() }}
+<div class="container mt-5">
+    <div class="card shadow-lg p-4">
+        <h2 class="text-center mb-4">Створити оголошення</h2>
 
-    <p>{{ form.title.label }}<br>{{ form.title() }}</p>
-    <p>{{ form.message.label }}<br>{{ form.message() }}</p>
-    <p>{{ form.students.label }}<br>{{ form.students(multiple=True) }}</p>
+        <form method="POST" class="needs-validation" novalidate>
+            {{ form.hidden_tag() }}
 
-    <p>{{ form.submit() }}</p>
-</form>
+            <div class="mb-3">
+                {{ form.title.label(class="form-label") }}
+                {{ form.title(class="form-control", placeholder="Введіть заголовок") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.message.label(class="form-label") }}
+                {{ form.message(class="form-control", placeholder="Введіть текст оголошення", rows="4") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.students.label(class="form-label") }}
+                {{ form.students(class="form-select", multiple=True) }}
+            </div>
+
+            <div class="text-center">
+                {{ form.submit(class="btn btn-primary btn-lg w-100") }}
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}

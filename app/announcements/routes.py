@@ -52,21 +52,6 @@ def create_announcement():
     return render_template("announcements/create.html", form=form)
 
 
-@announcements_bp.route("/archive/<int:announcement_id>", methods=["POST"])
-@login_required
-def archive_announcement(announcement_id):
-    """Архівування оголошення"""
-    announcement = Announcement.query.get_or_404(announcement_id)
-
-    if current_user.id != announcement.teacher_id:
-        flash("Ви не можете архівувати це оголошення", "danger")
-        return redirect(url_for("announcements.list_announcements"))
-
-    announcement.archived = True
-    db.session.commit()
-    flash("Оголошення архівоване", "success")
-    return redirect(url_for("announcements.list_announcements"))
-
 @announcements_bp.route("/archived")
 @login_required
 def list_archived_announcements():
