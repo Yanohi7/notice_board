@@ -1,8 +1,9 @@
 body {
+    background-color: #f8f0e3;
     font-family: Arial, sans-serif;
     padding: 20px;
     margin: 0;
-    padding-top: 70px; /* відступ, щоб хедер не перекривав контент */
+    padding-top: 70px; /* Відступ, щоб хедер не перекривав контент */
 }
 
 /* Карточки */
@@ -85,11 +86,11 @@ a.btn-link {
 }
 
 .custom-navbar button {
-    background-color: #007bff !important;
+    background-color: #007bff;
 }
 
 .custom-navbar button:hover {
-    background-color: #0056b3 !important;
+    background-color: #0056b3;
 }
 
 .logout-btn {
@@ -131,3 +132,15 @@ a.btn-link {
     50% { transform: translateY(-10px); }
     100% { transform: translateY(0px); }
 }
+
+/* Канцелярські кнопки */
+.pin {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    position: fixed;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    border: 2px solid #333;
+    z-index: 1000;
+}
+

@@ -1,5 +1,7 @@
 {% extends "base.html" %}
-{% block styles %} {% endblock %}
+{% block styles %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/announcements.css') }}">
+{% endblock %}
 {% block content %}
 <div class="container mt-5">
     <div class="card shadow-lg p-4">

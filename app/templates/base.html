@@ -12,44 +12,62 @@
     {% endblock %}
 </head>
 
-<body>
-    <!-- Хедер із навігацією видно тільки залогіненим користувачам, і на всіх сторінках крім login та register -->
+<body class="notice-board">
+    <div class="pin pin-top-left"></div>
+    <div class="pin pin-top-right"></div>
+    <div class="pin pin-bottom-left"></div>
+    <div class="pin pin-bottom-right"></div>
+
     {% if request.endpoint not in ['login', 'register'] and current_user.is_authenticated %}
         {% include "partials/header.html" %}
     {% endif %}
 
-    <!-- Виведення повідомлень -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <div class="flash-messages">
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category }}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
-    {% endwith %}
+    <div class="container mt-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
 
-    <!-- Основний контент сторінки -->
-    {% block content %}{% endblock %}
+        {% block content %}{% endblock %}
+    </div>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            const alerts = document.querySelectorAll(".alert");
+            const pins = document.querySelectorAll(".pin");
+            const colors = ["red", "blue", "green", "purple", "orange", "yellow"];
 
-            alerts.forEach((alert, index) => {
-                setTimeout(() => {
-                    alert.classList.add("show");  // Плавна поява
+            pins.forEach(pin => {
+                // Випадковий колір
+                pin.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
 
-                    setTimeout(() => {
-                        alert.classList.remove("show");  // Плавне зникнення
-                        setTimeout(() => alert.remove(), 500);  // Видалення з DOM
-                    }, 1700 + index * 500);  // Час затримки
-                }, 300 * index);
+                // Випадкове зміщення (0.5% - 2%)
+                let randomOffsetX = (Math.random() * 1.5 + 0.5).toFixed(1) + "%";
+                let randomOffsetY = (Math.random() * 1.5 + 0.5).toFixed(1) + "%";
+
+                if (pin.classList.contains("pin-top-left")) {
+                    pin.style.top = `calc(70px + ${randomOffsetY})`;
+                    pin.style.left = `calc(10px + ${randomOffsetX})`;
+                } else if (pin.classList.contains("pin-top-right")) {
+                    pin.style.top = `calc(70px + ${randomOffsetY})`;
+                    pin.style.right = `calc(10px + ${randomOffsetX})`;
+                } else if (pin.classList.contains("pin-bottom-left")) {
+                    pin.style.bottom = `calc(10px + ${randomOffsetY})`;
+                    pin.style.left = `calc(10px + ${randomOffsetX})`;
+                } else if (pin.classList.contains("pin-bottom-right")) {
+                    pin.style.bottom = `calc(10px + ${randomOffsetY})`;
+                    pin.style.right = `calc(10px + ${randomOffsetX})`;
+                }
             });
         });
     </script>
-
 </body>
+
+
 </html>

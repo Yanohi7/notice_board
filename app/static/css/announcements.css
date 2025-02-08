@@ -42,10 +42,10 @@ body {
 
 /* Стилізація фонової форми */
 .card {
+    background-color: #f8f0e9;
     max-width: 600px;
     margin: auto;
     border-radius: 10px;
-    background: #ffffff;
 }
 
 /* Додатковий стиль для інпутів */
@@ -63,3 +63,5 @@ body {
 .btn-primary:hover {
     background-color: #0056b3;
 }
+
+
