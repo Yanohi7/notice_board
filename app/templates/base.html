@@ -13,14 +13,14 @@
 </head>
 
 <body class="notice-board">
-    <div class="pin pin-top-left"></div>
-    <div class="pin pin-top-right"></div>
-    <div class="pin pin-bottom-left"></div>
-    <div class="pin pin-bottom-right"></div>
 
-    {% if request.endpoint not in ['login', 'register'] and current_user.is_authenticated %}
-        {% include "partials/header.html" %}
-    {% endif %}
+{% if request.endpoint not in ['login', 'register'] and current_user.is_authenticated %}
+    {% include "partials/header.html" %}
+    {% include "partials/pins.html" %}
+{% endif %}
+
+
+
 
     <div class="container mt-4">
         {% with messages = get_flashed_messages(with_categories=true) %}
@@ -38,35 +38,6 @@
         {% block content %}{% endblock %}
     </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const pins = document.querySelectorAll(".pin");
-            const colors = ["red", "blue", "green", "purple", "orange", "yellow"];
-
-            pins.forEach(pin => {
-                // Випадковий колір
-                pin.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-
-                // Випадкове зміщення (0.5% - 2%)
-                let randomOffsetX = (Math.random() * 1.5 + 0.5).toFixed(1) + "%";
-                let randomOffsetY = (Math.random() * 1.5 + 0.5).toFixed(1) + "%";
-
-                if (pin.classList.contains("pin-top-left")) {
-                    pin.style.top = `calc(70px + ${randomOffsetY})`;
-                    pin.style.left = `calc(10px + ${randomOffsetX})`;
-                } else if (pin.classList.contains("pin-top-right")) {
-                    pin.style.top = `calc(70px + ${randomOffsetY})`;
-                    pin.style.right = `calc(10px + ${randomOffsetX})`;
-                } else if (pin.classList.contains("pin-bottom-left")) {
-                    pin.style.bottom = `calc(10px + ${randomOffsetY})`;
-                    pin.style.left = `calc(10px + ${randomOffsetX})`;
-                } else if (pin.classList.contains("pin-bottom-right")) {
-                    pin.style.bottom = `calc(10px + ${randomOffsetY})`;
-                    pin.style.right = `calc(10px + ${randomOffsetX})`;
-                }
-            });
-        });
-    </script>
 </body>
 
 
