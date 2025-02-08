@@ -30,49 +30,13 @@
             <a href="{{ url_for('login') }}" class="btn btn-link">Вже маєте акаунт? Увійдіть тут</a>
         </div>
 
-        <div class="text-center my-3">АБО</div>
+        <hr>
 
-        <!-- Кнопка Google Sign-In -->
-        <div class="d-flex justify-content-center">
-            <div id="g_id_onload"
-                 data-client_id="617019427896-8kpmb8bnfppdreolu6m0k7afggehcl96.apps.googleusercontent.com"
-                 data-context="signin"
-                 data-ux_mode="popup"
-                 data-login_uri="{{ url_for('google_login', _external=True) }}"
-                 data-auto_select="true">
-            </div>
-            <div class="g_id_signin" data-type="standard"></div>
+        <div class="d-grid">
+            <a href="{{ url_for('googleLogin') }}" class="btn btn-danger">
+                <i class="fa-brands fa-google"></i> Увійти через Google
+            </a>
         </div>
     </div>
 </div>
-
-<!-- Підключення Google Identity API -->
-<script src="https://accounts.google.com/gsi/client" async defer></script>
-<script>
-function handleCredentialResponse(response) {
-    console.log("Google Token: " + response.credential);
-
-    // Відправка токена на сервер
-    fetch("{{ url_for('google_login', _external=True) }}", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" }, // ВАЖЛИВО!
-        body: JSON.stringify({ token: response.credential })
-    })
-    .then(response => {
-        if (!response.ok) throw new Error("HTTP error " + response.status);
-        return response.json();
-    })
-    .then(data => {
-        if (data.success) {
-            window.location.href = "{{ url_for('home') }}"; // Перенаправлення після успішного входу
-        } else {
-            alert("Помилка входу через Google: " + data.error);
-        }
-    })
-    .catch(error => {
-        console.error("Error:", error);
-        alert("Помилка зв'язку з сервером");
-    });
-}
-</script>
 {% endblock %}
