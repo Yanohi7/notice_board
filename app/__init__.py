@@ -22,7 +22,7 @@ login_manager = LoginManager(app)
 login_manager.login_view = "login"
 
 # імпортується модель користувача, щоб працювати з нею у додатку
-from app.models import User, Announcement, AnnouncementReceiver
+from app.models import User, Announcement, AnnouncementRecipient
 
 # задається функція завантаження користувача flask-login за його id
 @login_manager.user_loader

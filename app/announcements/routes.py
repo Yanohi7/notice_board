@@ -1,7 +1,7 @@
 from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
 from app import db
-from app.models import Announcement, AnnouncementReceiver, User
+from app.models import Announcement, AnnouncementRecipient, User
 from app.announcements import announcements_bp
 from app.announcements.forms import AnnouncementForm
 
@@ -14,8 +14,8 @@ def list_announcements():
     else:
         announcements = (
             db.session.query(Announcement)
-            .join(AnnouncementReceiver)
-            .filter(AnnouncementReceiver.student_id == current_user.id, Announcement.archived == False)
+            .join(AnnouncementRecipient)
+            .filter(AnnouncementRecipient.student_id == current_user.id, Announcement.archived == False)
             .all()
         )
     return render_template("announcements/list.html", announcements=announcements)
@@ -39,7 +39,7 @@ def create_announcement():
         db.session.commit()
 
         for student_id in form.students.data:
-            receiver = AnnouncementReceiver(
+            receiver = AnnouncementRecipient(
                 announcement_id=new_announcement.id, student_id=student_id
             )
             db.session.add(receiver)
@@ -76,8 +76,8 @@ def list_archived_announcements():
     else:
         announcements = (
             db.session.query(Announcement)
-            .join(AnnouncementReceiver)
-            .filter(AnnouncementReceiver.student_id == current_user.id, Announcement.archived == True)
+            .join(AnnouncementRecipient)
+            .filter(AnnouncementRecipient.student_id == current_user.id, Announcement.archived == True)
             .all()
         )
     return render_template("announcements/archived.html", announcements=announcements)
