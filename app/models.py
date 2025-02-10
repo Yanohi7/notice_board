@@ -2,17 +2,15 @@ from datetime import datetime
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import db, bcrypt
+from flask_login import UserMixin
 
-
-class User(db.Model):
+class User(db.Model, UserMixin):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
     role = db.Column(db.Integer, nullable=False)
-    faculty_id = db.Column(db.Integer, db.ForeignKey('faculties.id'))
-    department_id = db.Column(db.Integer, db.ForeignKey('departments.id'))
 
     @staticmethod
     def hash_password(plain_password):
@@ -21,6 +19,19 @@ class User(db.Model):
     def check_password(self, plain_password):
         return bcrypt.check_password_hash(self.password, plain_password)
 
+        # Flask-Login methods
+    def is_active(self):
+        return True
+
+    def is_authenticated(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        return str(self.id)
+    
 class Faculty(db.Model):
     __tablename__ = 'faculties'
     id = db.Column(db.Integer, primary_key=True)

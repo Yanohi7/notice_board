@@ -14,17 +14,25 @@ def home():
 def register():
     form = RegisterForm()
     if form.validate_on_submit():
-        # створюється новий користувач і хешується його пароль
-        user = User(email=form.email.data)
-        user.set_password(form.password.data)
-        # додається користувач у базу даних
+        if User.query.filter_by(email=form.email.data).first():
+            flash("Користувач з таким email вже існує!", "danger")
+            return redirect(url_for("register"))
+
+        user = User(
+            username=form.username.data,  # Додано username
+            email=form.email.data,
+            password=User.hash_password(form.password.data),
+            role=5  # За замовчуванням студент
+        )
+
         db.session.add(user)
         db.session.commit()
-        # автоматичний вхід після реєстрації
         login_user(user)
         flash("Реєстрація успішна!", "success")
         return redirect(url_for("home"))
+
     return render_template("register.html", title="Реєстрація", form=form)
+
 
 # маршрут для входу користувача
 @app.route("/login", methods=["GET", "POST"])
