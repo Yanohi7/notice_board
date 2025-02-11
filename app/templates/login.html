@@ -3,7 +3,7 @@
 {% block title %}Вхід{% endblock %}
 
 {% block content %}
-<div class="container auth-container">
+<div class="container auth-container d-flex justify-content-center align-items-center min-vh-50">
     <div class="card p-4 shadow-lg" style="width: 400px;">
         <h2 class="text-center mb-3">Вхід</h2>
         <form method="POST">
@@ -21,6 +21,9 @@
             </div>
         </form>
         <div class="text-center mt-3">
+            <a href="{{ url_for('register') }}" class="btn btn-link">Не маєте акаунту? Зареєструйтеся</a>
+        </div>
+        <div class="text-center mt-2">
             <a href="{{ url_for('home') }}" class="btn btn-link">Назад</a>
         </div>
     </div>

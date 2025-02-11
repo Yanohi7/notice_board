@@ -3,7 +3,7 @@ from app import app, db, bcrypt
 from app.forms import LoginForm, RegisterForm
 from app.models import User
 from flask_login import login_user, logout_user, login_required
-
+from .utils import admin_required
 # маршрут для головної сторінки
 @app.route("/")
 def home():
@@ -41,6 +41,7 @@ def login():
     if form.validate_on_submit():
         # шукається користувач за email
         user = User.query.filter_by(email=form.email.data).first()
+        
         # перевіряється правильність пароля
         if user and user.check_password(form.password.data):
             login_user(user)
@@ -48,7 +49,16 @@ def login():
             return redirect(url_for("home"))
         else:
             flash("Невірний email або пароль", "danger")
+    
     return render_template("login.html", title="Вхід", form=form)
+
+@app.route("/admin", methods=["GET"])
+@login_required
+@admin_required
+def admin_dashboard():
+    users = User.query.all()
+    return render_template("admin_dashboard.html", title="Адмін-панель", users=users)
+
 
 # маршрут для виходу користувача з системи
 @app.route("/logout")

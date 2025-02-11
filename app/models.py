@@ -32,6 +32,7 @@ class User(db.Model, UserMixin):
     def get_id(self):
         return str(self.id)
     
+    
 class Faculty(db.Model):
     __tablename__ = 'faculties'
     id = db.Column(db.Integer, primary_key=True)

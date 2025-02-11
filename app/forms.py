@@ -4,22 +4,19 @@ from wtforms.validators import DataRequired, Email, Length, EqualTo, ValidationE
 
 from app import User
 
-# створюється форма входу
 class LoginForm(FlaskForm):
     # поле для введення email з валідацією
-    email = StringField('Email', validators=[DataRequired(), Email()])
-    # поле для введення пароля з мінімальною довжиною 6 символів
-    password = PasswordField('Пароль', validators=[DataRequired(), Length(min=6)])
-    # кнопка для відправлення форми
+    email = StringField('Email', validators=[DataRequired(), Email()])   
+    password = PasswordField('Пароль', validators=[DataRequired()])
     submit = SubmitField('Увійти')
+
 
 # створюється форма реєстрації
 class RegisterForm(FlaskForm):
     username = StringField("Ім'я користувача", validators=[DataRequired()])
     # поле для введення email з валідацією
     email = StringField('Email', validators=[DataRequired(), Email()])
-    
-    # поле для введення пароля з вимогами до складності
+
     password = PasswordField(
         'Пароль',
         validators=[
@@ -37,11 +34,9 @@ class RegisterForm(FlaskForm):
         'Підтвердження паролю',
         validators=[DataRequired(), EqualTo('password', message='Паролі мають збігатися')]
     )
-    
-    # кнопка для відправлення форми
+
     submit = SubmitField('Зареєструватися')
 
-    # перевіряється, чи вже існує користувач з таким email у базі даних
     def validate_email(self, email):
         user = User.query.filter_by(email=email.data).first()
         if user:
