@@ -16,6 +16,8 @@ bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 login_manager.login_view = "login"
 
+# імпортується модель користувача, щоб працювати з нею у додатку
+from app.models import User, Announcement, AnnouncementRecipient
 
 oauth = OAuth(app)
 
@@ -29,8 +31,7 @@ oauth.register(
     }
 )
 
-from app.models import User
-
+# задається функція завантаження користувача flask-login за його id
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))

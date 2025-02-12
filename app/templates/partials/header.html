@@ -1,11 +1,14 @@
 <div style="background-color: #F5F0D9" class="custom-navbar">
     <div class="announcements-list">
-        <a href="{{ url_for('announcements.list_announcements') }}" class="btn btn-primary">Оголошення</a>
+        <a href="{{ url_for('announcements') }}" class="btn btn-primary">Оголошення</a>
     </div>
 
     {% if current_user.is_authenticated %}
         <div class="user-info">
-            <span class="user-email">Привіт, {{ current_user.email }}!</span>
+            <span class="user-email">Привіт, {{ current_user.username }}!</span>
+            {% if current_user.role == 0 %}
+                <a href="{{ url_for('admin_dashboard') }}" class="btn btn-warning">Адмін-панель</a>
+            {% endif %}
             <a href="{{ url_for('logout') }}">
                 <button class="logout-btn">Вийти</button>
             </a>

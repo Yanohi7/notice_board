@@ -1,39 +1,96 @@
 from datetime import datetime
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-from app import db
+from app import db, bcrypt
+from flask_login import UserMixin
 
-# створюється модель користувача для бази даних
 class User(db.Model, UserMixin):
-    """модель користувача"""
-    id = db.Column(db.Integer, primary_key=True)  # унікальний ідентифікатор користувача
-    email = db.Column(db.String(150), unique=True, nullable=False)  # унікальний email
-    password_hash = db.Column(db.String(256), nullable=False)  # хешований пароль
-    role = db.Column(db.String(10), default="user", nullable=False)  # роль за замовчуванням "user"
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)  # дата створення користувача
+    __tablename__ = 'users'
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String, nullable=False)
+    email = db.Column(db.String, nullable=False, unique=True)
+    password = db.Column(db.String, nullable=False)
+    role = db.Column(db.Integer, nullable=False)
 
-    def set_password(self, password):
-        """метод для хешування пароля перед збереженням у базі"""
-        self.password_hash = generate_password_hash(password)
+    @staticmethod
+    def hash_password(plain_password):
+        return bcrypt.generate_password_hash(plain_password).decode('utf-8')
 
-    def check_password(self, password):
-        """метод для перевірки введеного пароля з хешованим паролем"""
-        return check_password_hash(self.password_hash, password)
+    def check_password(self, plain_password):
+        return bcrypt.check_password_hash(self.password, plain_password)
 
+        # Flask-Login methods
+    def is_active(self):
+        return True
+
+    def is_authenticated(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        return str(self.id)
+    
+    
+class Faculty(db.Model):
+    __tablename__ = 'faculties'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+    departments = db.relationship('Department', backref='faculty', lazy=True)
+
+class Department(db.Model):
+    __tablename__ = 'departments'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+    faculty_id = db.Column(db.Integer, db.ForeignKey('faculties.id'))
+    groups = db.relationship('Group', backref='department', lazy=True)
+
+class Subject(db.Model):
+    __tablename__ = 'subjects'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+    department_id = db.Column(db.Integer, db.ForeignKey('departments.id'))
+
+class Group(db.Model):
+    __tablename__ = 'groups'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+    department_id = db.Column(db.Integer, db.ForeignKey('departments.id'))
+    user_groups = db.relationship('UserGroup', backref='group', lazy=True)
+
+class UserGroup(db.Model):
+    __tablename__ = 'user_groups'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    group_id = db.Column(db.Integer, db.ForeignKey('groups.id'))
 
 class Announcement(db.Model):
-    """Модель оголошення, яке створює викладач"""
+    __tablename__ = 'announcements'
     id = db.Column(db.Integer, primary_key=True)
-    teacher_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     title = db.Column(db.String(255), nullable=False)
-    message = db.Column(db.Text, nullable=False)
+    body = db.Column(db.Text, nullable=False)
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    archived = db.Column(db.Boolean, default=False)  # НОВЕ поле для архівування
 
+    author = db.relationship('User', backref=db.backref('announcements', lazy=True))
 
-class AnnouncementReceiver(db.Model):
-    """модель для збереження студентів, які отримали оголошення"""
-    id = db.Column(db.Integer, primary_key=True)  # унікальний ідентифікатор запису
-    announcement_id = db.Column(db.Integer, db.ForeignKey("announcement.id"), nullable=False)  # ID оголошення
-    student_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)  # ID студента, який отримав повідомлення
-    email_sent = db.Column(db.Boolean, default=False)  # чи було відправлено email студенту (True/False)
+class AnnouncementRecipient(db.Model):
+    __tablename__ = 'announcement_recipients'
+    id = db.Column(db.Integer, primary_key=True)
+    announcement_id = db.Column(db.Integer, db.ForeignKey('announcements.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+class File(db.Model):
+    __tablename__ = 'files'
+    id = db.Column(db.Integer, primary_key=True)
+    filename = db.Column(db.String, nullable=False)
+    file_path = db.Column(db.String, nullable=False)
+    uploaded_by = db.Column(db.Integer, db.ForeignKey('users.id'))
+    created_at = db.Column(db.DateTime, nullable=False)
+
+class Permission(db.Model):
+    __tablename__ = 'permissions'
+    id = db.Column(db.Integer, primary_key=True)
+    role_id = db.Column(db.Integer, nullable=False)
+    permission_name = db.Column(db.String, nullable=False)

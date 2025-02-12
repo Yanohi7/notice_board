@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Редагування користувача{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Редагування користувача</h2>
+    <div class="card shadow-lg p-4" style="max-width: 500px; margin: auto;">
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <div class="mb-3">
+                {{ form.username.label(class="form-label") }}
+                {{ form.username(class="form-control") }}
+            </div>
+            <div class="mb-3">
+                {{ form.email.label(class="form-label") }}
+                {{ form.email(class="form-control") }}
+            </div>
+            <div class="mb-3">
+                {{ form.role.label(class="form-label") }}
+                {{ form.role(class="form-select") }}
+            </div>
+            <div class="d-grid gap-2">
+                {{ form.submit(class="btn btn-success") }}
+                <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">Скасувати</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
