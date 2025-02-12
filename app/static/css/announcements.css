@@ -64,4 +64,8 @@ body {
     background-color: #0056b3;
 }
 
+.black-icon {
+    filter: brightness(0);
+}
+
 

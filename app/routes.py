@@ -118,6 +118,8 @@ def googleCallback():
         return redirect(url_for("login"))  # Якщо немає даних – повертаємо на сторінку входу
 
     email = user_info.get("email")
+    username = user_info.get("name")  # Отримуємо ім'я користувача
+
     if not email:
         return redirect(url_for("login"))  # Якщо немає email – не можемо автентифікувати
 
@@ -125,10 +127,14 @@ def googleCallback():
 
     if not user:
         # Якщо користувача немає, створюємо нового
-        user = User(email=email, name=user_info.get("name"))
+        user = User(
+            email=email,
+            username=username or "GoogleUser",  # Якщо ім'я не приходить, даємо дефолтне
+            password=User.hash_password("defaultpassword"),  # Генеруємо тимчасовий пароль
+            role=5  # 5 — студент за замовчуванням
+        )
         db.session.add(user)
         db.session.commit()
-
     login_user(user, remember=True)  # Логуємо користувача через Flask-Login
 
     return redirect(url_for("home"))

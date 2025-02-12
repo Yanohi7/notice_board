@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block styles %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/announcements.css') }}">
+{% endblock %}
+{% block content %}
+
+<div class="container">
+    <a href="{{ url_for('announcements.sent_announcements') }}" class="btn btn-primary mb-3">
+        🔙 Назад до надісланих оголошень
+    </a>
+
+    <h2 class="text-center mb-4">✏️ Редагування оголошення</h2>
+
+    <form method="POST">
+        {{ form.hidden_tag() }}
+
+        <div class="form-group">
+            <label for="title">Заголовок</label>
+            {{ form.title(class="form-control", placeholder="Введіть заголовок") }}
+        </div>
+
+        <div class="form-group">
+            <label for="body">Текст оголошення</label>
+            {{ form.body(class="form-control", rows=5, placeholder="Введіть текст оголошення") }}
+        </div>
+        <br>
+        <div>
+        <button type="submit" class="btn btn-success">💾 Зберегти зміни</button>
+            <a href="{{ url_for('announcements.sent_announcements') }}" class="btn btn-danger"><span class="black-icon">❌</span> Скасувати</a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

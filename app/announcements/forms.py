@@ -1,11 +1,12 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, SelectMultipleField, SubmitField
-from wtforms.validators import DataRequired, Length
+from wtforms.validators import DataRequired, Length, Email
 
 
 class CreateAnnouncementForm(FlaskForm):
-    title = StringField("Заголовок", validators=[DataRequired(), Length(max=255)])
+    title = StringField("Заголовок", validators=[DataRequired()])
     body = TextAreaField("Текст оголошення", validators=[DataRequired()])
+    student_email = StringField("Email студента", validators=[DataRequired(), Email()])  # Поле для email
     submit = SubmitField("Опублікувати")
     
 class EditAnnouncementForm(FlaskForm):

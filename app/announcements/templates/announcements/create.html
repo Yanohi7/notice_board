@@ -16,14 +16,15 @@
             </div>
 
             <div class="mb-3">
-                {{ form.message.label(class="form-label") }}
-                {{ form.message(class="form-control", placeholder="Введіть текст оголошення", rows="4") }}
+                {{ form.body.label(class="form-label") }}
+                {{ form.body(class="form-control", placeholder="Введіть текст оголошення", rows="4") }}
             </div>
 
             <div class="mb-3">
-                {{ form.students.label(class="form-label") }}
-                {{ form.students(class="form-select", multiple=True) }}
+                {{ form.student_email.label(class="form-label") }}
+                {{ form.student_email(class="form-control", placeholder="Введіть email студента") }}
             </div>
+
 
             <div class="text-center">
                 {{ form.submit(class="btn btn-primary btn-lg w-100") }}

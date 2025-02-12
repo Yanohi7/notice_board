@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block styles %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/announcements.css') }}">
+{% endblock %}
+{% block content %}
+
+<div class="container">
+    <a class="btn btn-primary" href="{{ url_for('announcements.list_announcements') }}" class="btn btn-secondary mb-3">
+        🔙 Назад до дошки оголошень
+    </a>
+
+    <h2 class="text-center mb-4">📨 Надіслані оголошення</h2>
+
+    {% if sent_announcements %}
+        <div class="announcement-board">
+            {% for announcement in sent_announcements %}
+                <div class="announcement-card">
+                    <h3>{{ announcement.title }}</h3>
+                    <p>{{ announcement.body }}</p>
+                    <small class="text-muted">📅 {{ announcement.created_at.strftime('%d.%m.%Y %H:%M') }}</small>
+                    <div class="mt-2">
+                        <a href="{{ url_for('announcements.edit_announcement', announcement_id=announcement.id) }}" class="btn btn-sm btn-warning">✏️ Редагувати</a>
+                        <form action="{{ url_for('announcements.delete_announcement', announcement_id=announcement.id) }}" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return
+                                confirm('Ви впевнені, що хочете видалити це оголошення?')"><span class="black-icon">🗑</span> Видалити</button>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-center text-muted">Ви ще не надсилали оголошень</p>
+    {% endif %}
+</div>
+
+{% endblock %}

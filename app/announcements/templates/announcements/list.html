@@ -5,9 +5,14 @@
 {% block content %}
 
 <div class="container">
-    <a href="{{ url_for('announcements.create_announcement') }}" class="btn btn-primary mb-3">
-        Створити оголошення
-    </a>
+    <div class="d-flex justify-content-between mb-3">
+        <a href="{{ url_for('announcements.create_announcement') }}" class="btn btn-primary">
+            Створити оголошення
+        </a>
+        <a class="btn btn-primary" href="{{ url_for('announcements.sent_announcements') }}" class="btn btn-secondary">
+            Надіслані оголошення
+        </a>
+    </div>
 
     <h2 class="text-center mb-4">📌 Дошка оголошень</h2>
 
@@ -16,7 +21,7 @@
             {% for announcement in announcements %}
                 <div class="announcement-card">
                     <h3>{{ announcement.title }}</h3>
-                    <p>{{ announcement.message }}</p>
+                    <p>{{ announcement.body }}</p>
                     <small class="text-muted">📅 {{ announcement.created_at.strftime('%d.%m.%Y %H:%M') }}</small>
                 </div>
             {% endfor %}
