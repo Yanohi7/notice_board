@@ -68,11 +68,12 @@ class UserGroup(db.Model):
 class Announcement(db.Model):
     __tablename__ = 'announcements'
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String, nullable=False)
+    title = db.Column(db.String(255), nullable=False)
     body = db.Column(db.Text, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    created_at = db.Column(db.DateTime, nullable=False)
-    recipients = db.relationship('AnnouncementRecipient', backref='announcement', lazy=True)
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    author = db.relationship('User', backref=db.backref('announcements', lazy=True))
 
 class AnnouncementRecipient(db.Model):
     __tablename__ = 'announcement_recipients'

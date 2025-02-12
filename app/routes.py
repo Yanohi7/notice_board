@@ -1,6 +1,6 @@
 from flask import render_template, redirect, url_for, flash
 from app import app, db, bcrypt
-from app.forms import LoginForm, RegisterForm
+from app.forms import LoginForm, RegisterForm, EditUserForm
 from app.models import User
 from flask_login import login_user, logout_user, login_required
 from .utils import admin_required
@@ -58,6 +58,36 @@ def login():
 def admin_dashboard():
     users = User.query.all()
     return render_template("admin_dashboard.html", title="Адмін-панель", users=users)
+
+
+# маршрут для редагування користувача
+@app.route("/admin/edit_user/<int:user_id>", methods=["GET", "POST"])
+@login_required
+@admin_required
+def edit_user(user_id):
+    user = User.query.get_or_404(user_id)
+    form = EditUserForm(obj=user)
+    
+    if form.validate_on_submit():
+        user.username = form.username.data
+        user.email = form.email.data
+        user.role = form.role.data
+        db.session.commit()
+        flash("Користувача оновлено успішно!", "success")
+        return redirect(url_for("admin_dashboard"))
+    
+    return render_template("edit_user.html", title="Редагування користувача", form=form, user=user)
+
+# маршрут для видалення користувача
+@app.route("/admin/delete_user/<int:user_id>", methods=["POST"])
+@login_required
+@admin_required
+def delete_user(user_id):
+    user = User.query.get_or_404(user_id)
+    db.session.delete(user)
+    db.session.commit()
+    flash("Користувача видалено успішно!", "success")
+    return redirect(url_for("admin_dashboard"))
 
 
 # маршрут для виходу користувача з системи

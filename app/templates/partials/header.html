@@ -1,6 +1,6 @@
 <div class="custom-navbar">
     <div class="announcements-list">
-        <a href="{{ url_for('announcements.list_announcements') }}" class="btn btn-primary">Оголошення</a>
+        <a href="{{ url_for('announcements') }}" class="btn btn-primary">Оголошення</a>
     </div>
 
     {% if current_user.is_authenticated %}

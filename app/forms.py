@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
+from wtforms import StringField, PasswordField, SubmitField, EmailField, SelectField
 from wtforms.validators import DataRequired, Email, Length, EqualTo, ValidationError, Regexp
 
 from app import User
@@ -41,3 +41,23 @@ class RegisterForm(FlaskForm):
         user = User.query.filter_by(email=email.data).first()
         if user:
             raise ValidationError('Цей email вже використовується.')
+
+
+# створюється форма редагування користувача
+class EditUserForm(FlaskForm):
+    username = StringField("Ім'я користувача", validators=[DataRequired()])
+    email = EmailField("Email", validators=[DataRequired(), Email()])
+    role = SelectField(
+        "Роль користувача",
+        choices=[
+            ("0", "Адмін"),
+            ("1", "Ректор"),
+            ("2", "Декан"),
+            ("3", "Зав. кафедри"),
+            ("4", "Працівник факультету"),
+            ("5", "Студент")
+        ],
+        coerce=int,
+        validators=[DataRequired()]
+    )
+    submit = SubmitField("Зберегти зміни")
