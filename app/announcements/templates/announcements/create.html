@@ -1,7 +1,4 @@
 {% extends "base.html" %}
-{% block styles %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/announcements.css') }}">
-{% endblock %}
 {% block content %}
 <div class="container mt-5">
     <div class="card shadow-lg p-4">
@@ -21,8 +18,33 @@
             </div>
 
             <div class="mb-3">
-                {{ form.receivers.label(class="form-label") }}
-                {{ form.receivers(class="form-select", multiple=True) }}
+                {{ form.faculty.label(class="form-label") }}
+                {{ form.faculty(class="form-select") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.department.label(class="form-label") }}
+                {{ form.department(class="form-select") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.group.label(class="form-label") }}
+                {{ form.group(class="form-select") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.subject.label(class="form-label") }}
+                {{ form.subject(class="form-select") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.search.label(class="form-label") }}
+                {{ form.search(class="form-control", placeholder="Пошук студента") }}
+            </div>
+
+            <div id="recipients" class="mb-3">
+                <p class="text-muted">Оберіть отримувачів:</p>
+                <!-- Тут оновлюється список через AJAX -->
             </div>
 
             <div class="text-center">
@@ -31,4 +53,38 @@
         </form>
     </div>
 </div>
+
+{% block scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        function updateRecipients() {
+            let facultyId = document.getElementById("faculty").value;
+            let departmentId = document.getElementById("department").value;
+            let groupId = document.getElementById("group").value;
+            let subjectId = document.getElementById("subject").value;
+            let searchQuery = document.getElementById("search").value.trim();
+
+            let url = `/get_recipients?faculty_id=${facultyId}&department_id=${departmentId}&group_id=${groupId}&subject_id=${subjectId}&search=${searchQuery}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    let recipientsDiv = document.getElementById("recipients");
+                    recipientsDiv.innerHTML = "";
+                    data.forEach(user => {
+                        let checkbox = `<input type="checkbox" name="recipients" value="${user.id}"> ${user.name} <br>`;
+                        recipientsDiv.innerHTML += checkbox;
+                    });
+                });
+        }
+
+        document.getElementById("faculty").addEventListener("change", updateRecipients);
+        document.getElementById("department").addEventListener("change", updateRecipients);
+        document.getElementById("group").addEventListener("change", updateRecipients);
+        document.getElementById("subject").addEventListener("change", updateRecipients);
+        document.getElementById("search").addEventListener("input", updateRecipients);
+    });
+</script>
+{% endblock %}
+
 {% endblock %}
