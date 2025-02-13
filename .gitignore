@@ -176,5 +176,5 @@ cython_debug/
 
 .flaskenv
 .env
-.flaskenv
 .flaskenv_vv
+example.flaskenv
