@@ -9,7 +9,7 @@
         <a href="{{ url_for('announcements.create_announcement') }}" class="btn btn-primary">
             Створити оголошення
         </a>
-        <a class="btn btn-primary" href="{{ url_for('announcements.sent_announcements') }}" class="btn btn-secondary">
+        <a class="btn btn-primary" href="{{ url_for('announcements.sent_announcements') }}">
             Надіслані оголошення
         </a>
     </div>
@@ -20,8 +20,10 @@
         <div class="announcement-board">
             {% for announcement in announcements %}
                 <div class="announcement-card">
-                    <h3>{{ announcement.title }}</h3>
-                    <p>{{ announcement.body }}</p>
+                    <h3>
+                        <a href="{{ url_for('announcements.announcement_detail', announcement_id=announcement.id) }}" class="text-decoration-none">{{ announcement.title }}</a>
+                    </h3>
+                    <p>{{ announcement.body[:150] }}...</p>
                     <small class="text-muted">📅 {{ announcement.created_at.strftime('%d.%m.%Y %H:%M') }}</small>
                 </div>
             {% endfor %}

@@ -74,12 +74,18 @@ class Announcement(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     author = db.relationship('User', backref=db.backref('announcements', lazy=True))
+    recipients = db.relationship('AnnouncementRecipient', back_populates='announcement', cascade="all, delete-orphan")
+
 
 class AnnouncementRecipient(db.Model):
     __tablename__ = 'announcement_recipients'
     id = db.Column(db.Integer, primary_key=True)
-    announcement_id = db.Column(db.Integer, db.ForeignKey('announcements.id'))
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    announcement_id = db.Column(db.Integer, db.ForeignKey('announcements.id', ondelete="CASCADE"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete="CASCADE"), nullable=False)
+    is_read = db.Column(db.Boolean, default=False)  # Позначка, чи було прочитано
+
+    announcement = db.relationship('Announcement', back_populates='recipients')
+    user = db.relationship('User', backref=db.backref('received_announcements', lazy=True))
 
 class File(db.Model):
     __tablename__ = 'files'

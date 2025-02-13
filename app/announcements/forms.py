@@ -4,11 +4,12 @@ from wtforms.validators import DataRequired, Length, Email
 
 
 class CreateAnnouncementForm(FlaskForm):
-    title = StringField("Заголовок", validators=[DataRequired()])
+    title = StringField("Заголовок", validators=[DataRequired(), Length(max=255)])
     body = TextAreaField("Текст оголошення", validators=[DataRequired()])
-    user_email = StringField("Email отримувача", validators=[DataRequired(), Email()])  # Поле для email
+    # Додаємо поле для вибору отримувачів
+    receivers = SelectMultipleField("Одержувачі", coerce=int)
     submit = SubmitField("Опублікувати")
-
+    
 class EditAnnouncementForm(FlaskForm):
     title = StringField("Заголовок", validators=[DataRequired(), Length(max=255)])
     body = TextAreaField("Текст оголошення", validators=[DataRequired()])

@@ -1,8 +1,8 @@
-"""add Announcement table
+"""Update announcement_recipients table
 
-Revision ID: 2516a6858f28
+Revision ID: a2339b2712f0
 Revises: 
-Create Date: 2025-02-12 21:15:36.627425
+Create Date: 2025-02-13 10:45:51.111431
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '2516a6858f28'
+revision = 'a2339b2712f0'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -65,10 +65,11 @@ def upgrade():
     )
     op.create_table('announcement_recipients',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('announcement_id', sa.Integer(), nullable=True),
-    sa.Column('user_id', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['announcement_id'], ['announcements.id'], ),
-    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.Column('announcement_id', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('is_read', sa.Boolean(), nullable=True),
+    sa.ForeignKeyConstraint(['announcement_id'], ['announcements.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('groups',
