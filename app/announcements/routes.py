@@ -2,7 +2,7 @@ from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
 from app import db
 from flask import jsonify
-from app.models import Announcement, AnnouncementRecipient, User, UserRole, Group, Subject
+from app.models import Announcement, AnnouncementRecipient, User, UserRole, Group, Subject, AnnouncementCategory, Department, Faculty
 from app.announcements import announcements_bp
 from app.announcements.forms import CreateAnnouncementForm, EditAnnouncementForm
 from flask_mail import Message
@@ -17,17 +17,27 @@ def send_email(recipient, subject, body, sender_email):
 @announcements_bp.route("/", methods=["GET"])
 @login_required
 def list_announcements():
-    announcements = (
+    category_id = request.args.get("category_id", type=int)
+    sort_by = request.args.get("sort_by", "created_at")  # За замовчуванням сортування за датою створення
+    # Основний запит: оголошення, які отримав поточний користувач
+    query = (
         Announcement.query
         .join(AnnouncementRecipient)
         .filter(AnnouncementRecipient.user_id == current_user.id)
-        .order_by(Announcement.created_at.desc())
-        .all()
     )
-
-
-    return render_template("announcements/list.html", announcements=announcements)
-
+    # Фільтр за категорією, якщо вона вибрана
+    if category_id:
+        query = query.filter(Announcement.category_id == category_id)
+    # Сортування
+    if sort_by == "title":
+        query = query.order_by(Announcement.title.asc())
+    else:
+        query = query.order_by(Announcement.created_at.desc())  # За замовчуванням сортуємо за часом
+    announcements = query.all()
+    # Отримуємо всі категорії для вибору у фільтрі
+    categories = AnnouncementCategory.query.all()
+    return render_template("announcements/list.html", announcements=announcements, 
+                           categories=categories, selected_category=category_id, sort_by=sort_by)
 
 
 @announcements_bp.route("/create", methods=["GET", "POST"])
@@ -38,43 +48,39 @@ def create_announcement():
         return redirect(url_for("announcements.list_announcements"))
 
     form = CreateAnnouncementForm()
-
+    form.category.choices = [(c.id, c.name) for c in AnnouncementCategory.query.all()]  # Додаємо вибір категорії
+    form.faculty.choices = [(f.id, f.name) for f in Faculty.query.all()]
+    form.department.choices = [(d.id, d.name) for d in Department.query.all()]
+    form.group.choices = [(g.id, g.name) for g in Group.query.all()]
+    form.subject.choices = [(s.id, s.name) for s in Subject.query.all()]
+    
+    
     # Динамічна генерація списку отримувачів залежно від ролі
     recipients_query = User.query
-
     if current_user.role == UserRole.TEACHER:
-        # Викладач може надсилати оголошення лише студентам, які записані на його предмети
         recipients_query = recipients_query.join(Subject).filter(Subject.teacher_id == current_user.id)
-
     elif current_user.role == UserRole.HEAD_OF_DEPARTMENT:
-        # Завідувач кафедри може надсилати оголошення всім студентам його кафедри
         recipients_query = recipients_query.filter(User.department_id == current_user.department_id)
-
     elif current_user.role == UserRole.DEAN_OFFICE:
-        # Деканат може надсилати всім студентам факультету
         recipients_query = recipients_query.filter(User.faculty_id == current_user.faculty_id)
-
     elif current_user.role in [UserRole.RECTOR, UserRole.ADMIN]:
         # Ректор і адміністратор можуть надсилати всім користувачам
         pass  
-
     form.receivers.choices = [(user.id, user.username) for user in recipients_query.all()]
-
     if form.validate_on_submit():
+        print("Форма валідна")  # Додано для перевірки
         announcement = Announcement(
             title=form.title.data,
             body=form.body.data,
+            category_id=form.category.data,  # Додаємо категорію до оголошення
             author_id=current_user.id
         )
         db.session.add(announcement)
         db.session.commit()
-
         sender_email = current_user.email  
-
         for user_id in form.receivers.data:
             recipient = AnnouncementRecipient(announcement_id=announcement.id, user_id=user_id)
             db.session.add(recipient)
-
             # В майбутньому можна буде розкоментувати для надсилання email
             # user = User.query.get(user_id)
             # if user:
@@ -84,11 +90,9 @@ def create_announcement():
             #         f"{announcement.body}\n\nПереглянути: {url_for('announcements.announcement_detail', announcement_id=announcement.id, _external=True)}",
             #         sender_email
             #     )
-
         db.session.commit()
         flash("Оголошення опубліковано!", "success")
         return redirect(url_for("announcements.list_announcements"))
-
     return render_template("announcements/create.html", title="Створення оголошення", form=form)
 
 
@@ -98,21 +102,48 @@ def create_announcement():
 def edit_announcement(announcement_id):
     announcement = Announcement.query.get_or_404(announcement_id)
 
-    if announcement.author_id != current_user.id and current_user.role != 0:
+    # Перевірка прав доступу до редагування
+    if (
+        announcement.author_id != current_user.id
+        and current_user.role not in [UserRole.ADMIN, UserRole.RECTOR, UserRole.DEAN_OFFICE, UserRole.HEAD_OF_DEPARTMENT]
+    ):
         flash("Ви не маєте прав редагувати це оголошення!", "danger")
         return redirect(url_for("announcements.list_announcements"))
 
     form = EditAnnouncementForm(obj=announcement)
 
+    # Завантаження списку отримувачів
+    recipients_query = User.query
+    if current_user.role == UserRole.TEACHER:
+        recipients_query = recipients_query.join(Subject).filter(Subject.teacher_id == current_user.id)
+    elif current_user.role == UserRole.HEAD_OF_DEPARTMENT:
+        recipients_query = recipients_query.filter(User.department_id == current_user.department_id)
+    elif current_user.role == UserRole.DEAN_OFFICE:
+        recipients_query = recipients_query.filter(User.faculty_id == current_user.faculty_id)
+    elif current_user.role in [UserRole.RECTOR, UserRole.ADMIN]:
+        pass  
+
+    form.receivers.choices = [(user.id, user.username) for user in recipients_query.all()]
+
+    # Завантаження категорій для вибору
+    form.category.choices = [(cat.id, cat.name) for cat in AnnouncementCategory.query.all()]
+
     if form.validate_on_submit():
         announcement.title = form.title.data
         announcement.body = form.body.data
+        announcement.category_id = form.category.data  # Оновлення категорії
+
+        # Оновлення отримувачів
+        AnnouncementRecipient.query.filter_by(announcement_id=announcement.id).delete()
+        for user_id in form.receivers.data:
+            recipient = AnnouncementRecipient(announcement_id=announcement.id, user_id=user_id)
+            db.session.add(recipient)
+
         db.session.commit()
         flash("Оголошення оновлено!", "success")
         return redirect(url_for("announcements.list_announcements"))
 
-    return render_template("announcements/edit.html", title="Редагування оголошення", form=form,
-                           announcement=announcement)
+    return render_template("announcements/edit.html", title="Редагування оголошення", form=form, announcement=announcement)
 
 @announcements_bp.route("/view/<int:announcement_id>", methods=["GET"])
 @login_required

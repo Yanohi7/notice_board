@@ -18,6 +18,11 @@
             </div>
 
             <div class="mb-3">
+                {{ form.category.label(class="form-label") }}
+                {{ form.category(class="form-select") }}
+            </div>
+            
+            <div class="mb-3">
                 {{ form.faculty.label(class="form-label") }}
                 {{ form.faculty(class="form-select") }}
             </div>
@@ -44,7 +49,9 @@
 
             <div id="recipients" class="mb-3">
                 <p class="text-muted">Оберіть отримувачів:</p>
-                <!-- Тут оновлюється список через AJAX -->
+                {% for user_id, username in form.receivers.choices %}
+                    <input type="checkbox" name="receivers" value="{{ user_id }}"> {{ username }}<br>
+                {% endfor %}
             </div>
 
             <div class="text-center">
@@ -72,7 +79,7 @@
                     let recipientsDiv = document.getElementById("recipients");
                     recipientsDiv.innerHTML = "";
                     data.forEach(user => {
-                        let checkbox = `<input type="checkbox" name="recipients" value="${user.id}"> ${user.name} <br>`;
+                        let checkbox = `<input type="checkbox" name="receivers" value="${user.id}"> ${user.name} <br>`;
                         recipientsDiv.innerHTML += checkbox;
                     });
                 });
@@ -86,5 +93,4 @@
     });
 </script>
 {% endblock %}
-
 {% endblock %}

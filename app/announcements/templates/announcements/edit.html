@@ -23,9 +23,20 @@
             <label for="body">Текст оголошення</label>
             {{ form.body(class="form-control", rows=5, placeholder="Введіть текст оголошення") }}
         </div>
+        
+        <div class="form-group">
+            <label for="category">Категорія</label>
+            {{ form.category(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            <label for="receivers">Отримувачі</label>
+            {{ form.receivers(class="form-control", multiple=True) }}
+        </div>
+        
         <br>
         <div>
-        <button type="submit" class="btn btn-success">💾 Зберегти зміни</button>
+            <button type="submit" class="btn btn-success">💾 Зберегти зміни</button>
             <a href="{{ url_for('announcements.sent_announcements') }}" class="btn btn-danger"><span class="black-icon">❌</span> Скасувати</a>
         </div>
     </form>

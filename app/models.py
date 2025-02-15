@@ -74,15 +74,26 @@ class Announcement(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(255), nullable=False)
     body = db.Column(db.Text, nullable=False)
-    author_id = db.Column(db.Integer, db.ForeignKey('users.id', name='fk_announcement_author'), nullable=False)
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    category_id = db.Column(db.Integer, db.ForeignKey('announcement_categories.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    author = db.relationship('User', backref=db.backref('announcements', lazy=True))
+    recipients = db.relationship('AnnouncementRecipient', back_populates='announcement', cascade="all, delete-orphan")
+
+
 
 class AnnouncementRecipient(db.Model):
     __tablename__ = 'announcement_recipients'
     id = db.Column(db.Integer, primary_key=True)
-    announcement_id = db.Column(db.Integer, db.ForeignKey('announcements.id', name='fk_recipient_announcement', ondelete="CASCADE"), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id', name='fk_recipient_user', ondelete="CASCADE"), nullable=False)
+    announcement_id = db.Column(db.Integer, db.ForeignKey('announcements.id', ondelete="CASCADE"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete="CASCADE"), nullable=False)
     is_read = db.Column(db.Boolean, default=False)
+
+    # Виправляємо: потрібно встановити `back_populates` на оголошення
+    announcement = db.relationship('Announcement', back_populates='recipients')
+    user = db.relationship('User', backref=db.backref('received_announcements', lazy=True))
+
 
 class File(db.Model):
     __tablename__ = 'files'
@@ -97,3 +108,11 @@ class Permission(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     role_id = db.Column(db.Integer, nullable=False)
     permission_name = db.Column(db.String, nullable=False)
+
+
+class AnnouncementCategory(db.Model):
+    __tablename__ = 'announcement_categories'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False, unique=True)
+    announcements = db.relationship('Announcement', backref='category', lazy=True)
+
