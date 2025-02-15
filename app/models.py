@@ -19,6 +19,14 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
     role = db.Column(db.Integer, nullable=False)
+    faculty_id = db.Column(db.Integer, db.ForeignKey('faculties.id', name='fk_user_faculty'))
+    department_id = db.Column(db.Integer, db.ForeignKey('departments.id', name='fk_user_department'))
+    group_id = db.Column(db.Integer, db.ForeignKey('groups.id', name='fk_user_group'))  # Додаємо ім'я ключа
+    faculty = db.relationship('Faculty', backref='users')
+    department = db.relationship('Department', backref='users')
+    group = db.relationship('Group', backref='users')
+
+
 
     @staticmethod
     def hash_password(plain_password):
@@ -63,11 +71,6 @@ class Group(db.Model):
     name = db.Column(db.String, nullable=False)
     department_id = db.Column(db.Integer, db.ForeignKey('departments.id', name='fk_group_department'), nullable=False)
 
-class UserGroup(db.Model):
-    __tablename__ = 'user_groups'
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id', name='fk_usergroup_user'), nullable=False)
-    group_id = db.Column(db.Integer, db.ForeignKey('groups.id', name='fk_usergroup_group'), nullable=False)
 
 class Announcement(db.Model):
     __tablename__ = 'announcements'
@@ -103,11 +106,11 @@ class File(db.Model):
     uploaded_by = db.Column(db.Integer, db.ForeignKey('users.id', name='fk_file_user'), nullable=False)
     created_at = db.Column(db.DateTime, nullable=False)
 
-class Permission(db.Model):
-    __tablename__ = 'permissions'
-    id = db.Column(db.Integer, primary_key=True)
-    role_id = db.Column(db.Integer, nullable=False)
-    permission_name = db.Column(db.String, nullable=False)
+# class Permission(db.Model):
+#     __tablename__ = 'permissions'
+#     id = db.Column(db.Integer, primary_key=True)
+#     role_id = db.Column(db.Integer, nullable=False)
+#     permission_name = db.Column(db.String, nullable=False)
 
 
 class AnnouncementCategory(db.Model):

@@ -48,12 +48,12 @@ def create_announcement():
         return redirect(url_for("announcements.list_announcements"))
 
     form = CreateAnnouncementForm()
-    form.category.choices = [(c.id, c.name) for c in AnnouncementCategory.query.all()]  # Додаємо вибір категорії
+    form.category.choices = [(c.id, c.name) for c in AnnouncementCategory.query.all()]    
+    # Додаємо списки вибору
     form.faculty.choices = [(f.id, f.name) for f in Faculty.query.all()]
     form.department.choices = [(d.id, d.name) for d in Department.query.all()]
     form.group.choices = [(g.id, g.name) for g in Group.query.all()]
-    form.subject.choices = [(s.id, s.name) for s in Subject.query.all()]
-    
+    form.subject.choices = [(s.id, s.name) for s in Subject.query.all()]   
     
     # Динамічна генерація списку отримувачів залежно від ролі
     recipients_query = User.query
