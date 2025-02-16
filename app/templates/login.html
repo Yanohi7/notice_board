@@ -3,34 +3,30 @@
 {% block title %}Вхід{% endblock %}
 
 {% block content %}
+
 <div class="container auth-container d-flex justify-content-center align-items-center min-vh-50">
     <div class="card p-4 shadow-lg" style="width: 400px;">
         <h2 class="text-center mb-3">Вхід</h2>
 
         <form method="POST">
             {{ form.hidden_tag() }}
+
             <div class="mb-3">
                 {{ form.email.label(class="form-label") }}
                 {{ form.email(class="form-control") }}
-                {% if form.email.errors %}
-                    <div class="text-danger">
-                        {% for error in form.email.errors %}
-                            <small>{{ error }}</small><br>
-                        {% endfor %}
-                    </div>
-                {% endif %}
+                {% for error in form.email.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
             </div>
+
             <div class="mb-3">
                 {{ form.password.label(class="form-label") }}
                 {{ form.password(class="form-control") }}
-                {% if form.password.errors %}
-                    <div class="text-danger">
-                        {% for error in form.password.errors %}
-                            <small>{{ error }}</small><br>
-                        {% endfor %}
-                    </div>
-                {% endif %}
+                {% for error in form.password.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
             </div>
+
             <div class="d-grid">
                 {{ form.submit(class="btn btn-primary") }}
             </div>
