@@ -5,9 +5,8 @@ from wtforms.validators import DataRequired, Email, Length, EqualTo, ValidationE
 from app import User
 
 class LoginForm(FlaskForm):
-    # поле для введення email з валідацією
-    email = StringField('Email', validators=[DataRequired(), Email()])   
-    password = PasswordField('Пароль', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()], render_kw={"autocomplete": "email"})
+    password = PasswordField('Пароль', validators=[DataRequired()], render_kw={"autocomplete": "current-password"})
     submit = SubmitField('Увійти')
 
 

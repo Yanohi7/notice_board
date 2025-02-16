@@ -175,3 +175,6 @@ cython_debug/
 .vscode/settings.json
 
 .flaskenv
+.env
+.flaskenv_vv
+example.flaskenv
