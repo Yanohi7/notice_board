@@ -95,21 +95,24 @@ def create_announcement():
     return render_template("announcements/create.html", title="Створення оголошення", form=form)
 
 
-
 @announcements_bp.route("/edit/<int:announcement_id>", methods=["GET", "POST"])
 @login_required
 def edit_announcement(announcement_id):
     announcement = Announcement.query.get_or_404(announcement_id)
 
-    # Перевірка прав доступу до редагування
+    # Перевірка прав доступу
     if (
-        announcement.author_id != current_user.id
-        and current_user.role not in [UserRole.ADMIN, UserRole.RECTOR, UserRole.DEAN_OFFICE, UserRole.HEAD_OF_DEPARTMENT]
+            announcement.author_id != current_user.id
+            and current_user.role not in [UserRole.ADMIN, UserRole.RECTOR, UserRole.DEAN_OFFICE,
+                                          UserRole.HEAD_OF_DEPARTMENT]
     ):
         flash("Ви не маєте прав редагувати це оголошення!", "danger")
         return redirect(url_for("announcements.list_announcements"))
 
     form = EditAnnouncementForm(obj=announcement)
+
+    # Завантаження категорій у форму
+    form.category.choices = [(cat.id, cat.name) for cat in AnnouncementCategory.query.all()]
 
     # Завантаження списку отримувачів
     recipients_query = User.query
@@ -119,13 +122,12 @@ def edit_announcement(announcement_id):
         recipients_query = recipients_query.filter(User.department_id == current_user.department_id)
     elif current_user.role == UserRole.DEAN_OFFICE:
         recipients_query = recipients_query.filter(User.faculty_id == current_user.faculty_id)
-    elif current_user.role in [UserRole.RECTOR, UserRole.ADMIN]:
-        pass  
 
     form.receivers.choices = [(user.id, user.username) for user in recipients_query.all()]
 
-    # Завантаження категорій для вибору
-    form.category.choices = [(cat.id, cat.name) for cat in AnnouncementCategory.query.all()]
+    # Автоматично вибираємо поточних отримувачів у формі
+    form.receivers.data = [r.user_id for r in
+                           AnnouncementRecipient.query.filter_by(announcement_id=announcement.id).all()]
 
     if form.validate_on_submit():
         announcement.title = form.title.data
@@ -133,16 +135,25 @@ def edit_announcement(announcement_id):
         announcement.category_id = form.category.data  # Оновлення категорії
 
         # Оновлення отримувачів
-        AnnouncementRecipient.query.filter_by(announcement_id=announcement.id).delete()
-        for user_id in form.receivers.data:
-            recipient = AnnouncementRecipient(announcement_id=announcement.id, user_id=user_id)
-            db.session.add(recipient)
+        new_recipients = set(map(int, form.receivers.data))  # Приводимо до чисел
+        old_recipients = set(
+            r.user_id for r in AnnouncementRecipient.query.filter_by(announcement_id=announcement.id).all())
+
+        # Видаляємо тих, кого більше немає у списку
+        for user_id in old_recipients - new_recipients:
+            AnnouncementRecipient.query.filter_by(announcement_id=announcement.id, user_id=user_id).delete()
+
+        # Додаємо нових отримувачів
+        for user_id in new_recipients - old_recipients:
+            db.session.add(AnnouncementRecipient(announcement_id=announcement.id, user_id=user_id))
 
         db.session.commit()
         flash("Оголошення оновлено!", "success")
         return redirect(url_for("announcements.list_announcements"))
 
-    return render_template("announcements/edit.html", title="Редагування оголошення", form=form, announcement=announcement)
+    return render_template("announcements/edit.html", title="Редагування оголошення", form=form,
+                           announcement=announcement)
+
 
 @announcements_bp.route("/view/<int:announcement_id>", methods=["GET"])
 @login_required
