@@ -49,7 +49,6 @@ def create_announcement():
 
     form = CreateAnnouncementForm()
     form.category.choices = [(c.id, c.name) for c in AnnouncementCategory.query.all()]    
-    # Додаємо списки вибору
     form.faculty.choices = [(f.id, f.name) for f in Faculty.query.all()]
     form.department.choices = [(d.id, d.name) for d in Department.query.all()]
     form.group.choices = [(g.id, g.name) for g in Group.query.all()]
