@@ -8,13 +8,17 @@
 
 <div class="container">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <a href="{{ url_for('announcements.create_announcement') }}" class="btn btn-primary">
-            ➕ Створити оголошення
-        </a>
-        <a class="btn btn-secondary" href="{{ url_for('announcements.sent_announcements') }}">
-            📤 Надіслані оголошення
-        </a>
+        {% if current_user.role in [UserRole.ADMIN, UserRole.RECTOR, UserRole.DEAN_OFFICE, UserRole.HEAD_OF_DEPARTMENT, UserRole.TEACHER] %}
+            <a href="{{ url_for('announcements.create_announcement') }}" class="btn btn-primary">
+                ➕ Створити оголошення
+            </a>
+            <a class="btn btn-secondary" href="{{ url_for('announcements.sent_announcements') }}">
+                📤 Надіслані оголошення
+            </a>
+        {% endif %}
     </div>
+</div>
+
 
     <h2 class="text-center mb-4">📌 Дошка оголошень</h2>
 

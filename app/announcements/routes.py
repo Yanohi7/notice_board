@@ -37,7 +37,7 @@ def list_announcements():
     # Отримуємо всі категорії для вибору у фільтрі
     categories = AnnouncementCategory.query.all()
     return render_template("announcements/list.html", announcements=announcements, 
-                           categories=categories, selected_category=category_id, sort_by=sort_by)
+                           categories=categories, selected_category=category_id, sort_by=sort_by, UserRole=UserRole)
 
 
 @announcements_bp.route("/create", methods=["GET", "POST"])
