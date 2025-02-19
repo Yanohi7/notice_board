@@ -168,7 +168,20 @@ def announcement_detail(announcement_id):
         recipient.is_read = True
         db.session.commit()
     
-    return render_template("announcement_detail.html", title=announcement.title, announcement=announcement)
+    return render_template("announcements/announcement_detail.html", title=announcement.title, announcement=announcement)
+
+@announcements_bp.route('/announcements/<int:announcement_id>/mark_as_read', methods=['POST'])
+@login_required
+def mark_as_read(announcement_id):
+    recipient = AnnouncementRecipient.query.filter_by(announcement_id=announcement_id, user_id=current_user.id).first()
+
+    if not recipient:
+        return jsonify({"error": "Announcement not found for this user"}), 404
+
+    recipient.is_read = True
+    db.session.commit()
+    
+    return jsonify({"message": "Announcement marked as read"}), 200
 
 @announcements_bp.route("/delete/<int:announcement_id>", methods=["POST"])
 @login_required
